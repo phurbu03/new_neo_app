@@ -54,14 +54,40 @@ const restaurants = [
 
 function getCurrentHour() {
     const now = new Date();
-    return now.getHours() + now.getMinutes() / 60;
+    return now.getHours() + now.getMinutes() / 60; // 소수점 시간 반환
 }
 
 function getCurrentDay() {
-    return new Date().getDay();
+    return new Date().getDay(); // 0 = 일요일
 }
 
 function getRandomRestaurant() {
     const foodType = document.querySelector('input[name="foodType"]:checked').value;
     const currentHour = getCurrentHour();
-    const currentDay = getCurre
+    const currentDay = getCurrentDay();
+
+    const filtered = restaurants.filter(res => {
+        const isClosedToday = res.closedDays.includes(currentDay);
+        if (isClosedToday) return false;
+
+        if (Array.isArray(res.open[0])) {
+            return res.open.some(([start, end]) => currentHour >= start && currentHour < end);
+        } else {
+            const [start, end] = res.open;
+            return currentHour >= start && currentHour < end;
+        }
+    });
+
+    const result = document.getElementById("result");
+    if (filtered.length === 0) {
+        result.innerText = "현재 영업 중인 음식점이 없습니다.";
+    } else {
+        const randomIndex = Math.floor(Math.random() * filtered.length);
+        const restaurant = filtered[randomIndex];
+        result.innerHTML = `
+            <p class="restaurant-name">${restaurant.name}</p>
+            <p>음식 종류: ${restaurant.type}</p>
+            <p>Google 검색: <a href="https://www.google.com/search?q=${restaurant.name}" target="_blank">${restaurant.name}</a></p>
+        `;
+    }
+}
