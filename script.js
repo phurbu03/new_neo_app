@@ -115,6 +115,7 @@ function getRandomRestaurant() {
             <p class="restaurant-name" style="font-size: 24px; font-weight: bold; color: #ff6f61;">${restaurant.name}</p>
             <p><strong>영업시간:</strong> ${formattedHours}</p>
             <p><a href="https://www.google.com/search?q=${encodeURIComponent(restaurant.name)}" target="_blank">Google에서 ${restaurant.name} 검색하기</a></p>
+
         `;
     }
 }
