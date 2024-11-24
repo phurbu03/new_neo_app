@@ -62,21 +62,56 @@ function getCurrentDay() {
 }
 
 function getRandomRestaurant() {
-    const foodType = document.querySelector('input[name="foodType"]:checked').value;
+    const foodTypeElement = document.querySelector('input[name="foodType"]:checked');
+    const foodType = foodTypeElement ? foodTypeElement.value : "all"; // 선택 안 함 처리
     const currentHour = getCurrentHour();
     const currentDay = getCurrentDay();
 
     const filtered = restaurants.filter(res => {
+        // 음식 종류 필터링 (선택 안 함일 경우 무시)
+        if (foodType !== "all" && res.type !== foodType) return false;
+
+        // 휴무일 필터링
         const isClosedToday = res.closedDays.includes(currentDay);
         if (isClosedToday) return false;
 
-        if (Array.isArray(res.open[0])) {
+        // 특별 영업 시간 필터링
+        if (res.specialOpen && res.specialOpen[currentDay]) {
+            const [start, end] = res.specialOpen[currentDay];
+            return currentHour >= start && currentHour < end;
+        }
+
+        // 일반 영업 시간 필터링
+        if (res.open && Array.isArray(res.open[0])) {
             return res.open.some(([start, end]) => currentHour >= start && currentHour < end);
-        } else {
+        } else if (res.open) {
             const [start, end] = res.open;
             return currentHour >= start && currentHour < end;
         }
+
+        return false;
     });
+
+    const result = document.getElementById("result");
+    if (filtered.length === 0) {
+        result.innerHTML = "<p>현재 영업 중인 음식점이 없습니다.</p>";
+    } else {
+        const randomIndex = Math.floor(Math.random() * filtered.length);
+        const restaurant = filtered[randomIndex];
+
+        // 영업시간 포맷팅
+        const formattedHours = Array.isArray(restaurant.open[0])
+            ? restaurant.open.map(([start, end]) => `${Math.floor(start)}:${(start % 1) * 60 || "00"}~${Math.floor(end)}:${(end % 1) * 60 || "00"}`).join(", ")
+            : `${Math.floor(restaurant.open[0])}:${(restaurant.open[0] % 1) * 60 || "00"}~${Math.floor(restaurant.open[1])}:${(restaurant.open[1] % 1) * 60 || "00"}`;
+
+        result.innerHTML = `
+            <p class="restaurant-name" style="font-size: 24px; font-weight: bold; color: #ff6f61;">${restaurant.name}</p>
+            <p><strong>영업시간:</strong> ${formattedHours}</p>
+            <p><a href="https://www.google.com/search?q=${encodeURIComponent(restaurant.name)}" target="_blank">Google에서 ${restaurant.name} 검색하기</a></p>
+        `;
+    }
+}
+
 
     const result = document.getElementById("result");
     if (filtered.length === 0) {
