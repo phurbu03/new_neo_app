@@ -1,5 +1,7 @@
 // 중식 음식점 데이터
+// 음식점 데이터
 const restaurants = [
+    // 중식 음식점 (기존 데이터 유지)
     { name: "미식성", type: "중식", open: [11, 21], closedDays: [], searchLink: "https://www.google.com/search?q=광운대+미식성" },
     { name: "더원", type: "중식", open: [11, 22], closedDays: [3], searchLink: "https://www.google.com/search?q=광운대+더원" },
     { name: "진짜루", type: "중식", open: [11, 21], closedDays: [], searchLink: "https://www.google.com/search?q=광운대+진짜루" },
@@ -9,7 +11,30 @@ const restaurants = [
     { name: "한스친친", type: "중식", open: [[11, 15], [16.5, 22]], closedDays: [], searchLink: "https://www.google.com/search?q=광운대+한스친친" },
     { name: "향원", type: "중식", open: [10, 20.5], closedDays: [], searchLink: "https://www.google.com/search?q=광운대+향원" },
     { name: "서향", type: "중식", open: [10.5, 21], closedDays: [], searchLink: "https://www.google.com/search?q=광운대+서향" },
+
+    // 한식 음식점
+    { name: "국수천왕", type: "한식", open: [11, 20.5], closedDays: [0], searchLink: "https://www.google.com/search?q=광운대+국수천왕" }, // 월~토
+    { name: "광운대학교 복지관 학생식당", type: "한식", open: [11, 21.5], closedDays: [], searchLink: "https://www.google.com/search?q=광운대+복지관+학생식당" }, // 일주일 내내
+    {
+        name: "윤스쿡",
+        type: "한식",
+        open: [[10, 15], [16.5, 19.5]], // 월~금 (점심/저녁)
+        specialOpen: { 6: [10.5, 15] }, // 토요일 (10:30~15:00)
+        closedDays: [0], // 일요일 휴무
+        searchLink: "https://www.google.com/search?q=광운대+윤스쿡",
+    },
+    { name: "미미식당", type: "한식", open: [11, 21.5], closedDays: [], searchLink: "https://www.google.com/search?q=광운대+미미식당" }, // 일주일 내내
+    { name: "후문식당", type: "한식", open: [10, 19], closedDays: [0], searchLink: "https://www.google.com/search?q=광운대+후문식당" }, // 월~토
+    {
+        name: "로스2000",
+        type: "한식",
+        open: [[17, 24], [0, 0.5]], // 오후 5시~자정, 자정 이후 30분
+        closedDays: [0], // 월~토, 일요일 휴무
+        searchLink: "https://www.google.com/search?q=광운대+로스2000",
+    },
+    { name: "광운양꼬치", type: "한식", open: [11, 21.5], closedDays: [], searchLink: "https://www.google.com/search?q=광운대+광운양꼬치" }, // 일주일 내내
 ];
+
 
 // 현재 시간을 가져오는 함수
 function getCurrentHour() {
